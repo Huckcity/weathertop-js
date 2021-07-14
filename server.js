@@ -3,11 +3,13 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const port = 3000
+const path = require('path')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 const stationRoutes = require('./routes/api/stations')
+const dashboardRoutes = require('./controllers/dashboard')
 
 // set up db
 const mongoose = require('mongoose')
@@ -39,17 +41,15 @@ app.engine(
     defaultLayout: 'main',
   })
 )
-app.set('view engine', '.hbs')
 
-app.use(express.static('public'))
+app.use('/public', express.static(path.join(__dirname, 'public')))
+app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
 
 // set routes
 app.use('/stations', stationRoutes)
-app.get('/', (req, res) => {
-  res.render('dashboard')
-})
+app.use('/', dashboardRoutes)
 
 // start server
 app.listen(port, () => {
-  console.log(`Example app listening on http:/localhost:${port}`)
+  console.log(`Example app listening on http://localhost:${port}`)
 })

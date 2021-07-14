@@ -4,11 +4,14 @@ const dashboard = require('../../controllers/dashboard.js')
 const Station = require('../../models/Station')
 
 // @route GET api/stations
-// @description Get all stattions
+// @description Get all stations
 // @access Public
 router.get('/', (req, res) => {
   Station.find()
-    .then((stations) => res.json(stations))
+    .then((stations) => {
+      res.json(stations)
+    })
+
     .catch((err) =>
       res.status(404).json({
         noStations: 'No stations found',
@@ -21,7 +24,10 @@ router.get('/', (req, res) => {
 // @access Public
 router.get('/:id', (req, res) => {
   Station.findById(req.params.id)
-    .then((station) => res.json(station))
+    .then((station) => {
+      console.log(station)
+      res.json(station)
+    })
     .catch((err) =>
       res.status(404).json({
         noStations: 'No station found for id: ' + req.params.id,

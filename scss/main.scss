@@ -1,1 +1,9 @@
-@import '../node_modules/bootstrap/scss/bootstrap.scss'
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+
+.station-latest {
+  background-color: black;
+  width: 50%;
+  height: 50%;
+  color: white;
+  padding: 2em;
+}

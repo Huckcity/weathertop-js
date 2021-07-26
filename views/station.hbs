@@ -1,0 +1,11 @@
+{{> menu id="station"}}
+
+{{> stationcard}}
+
+{{> stationreadings}}
+
+{{> addreading}}
+
+<form action="/stations/{{_id}}/autogenerate" method="POST">
+  <button type="submit" class="btn btn-warning">Auto Generate Reading</button>
+</form>

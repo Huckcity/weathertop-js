@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const ReadingSchema = require('./Reading')
 
 const StationSchema = new mongoose.Schema({
   name: {
@@ -12,6 +13,10 @@ const StationSchema = new mongoose.Schema({
   lng: {
     type: Number,
     required: true,
+  },
+  readings: {
+    type: [ReadingSchema.schema],
+    default: undefined,
   },
   created_on: {
     type: Date,

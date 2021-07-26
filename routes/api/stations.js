@@ -1,5 +1,9 @@
 const router = require('express').Router()
+
+const fetch = require('node-fetch')
+
 const Station = require('../../models/Station')
+const Reading = require('../../models/Reading')
 
 // @route GET api/stations
 // @description Get all stations
@@ -9,7 +13,6 @@ router.get('/', (req, res) => {
     .then((stations) => {
       res.json(stations)
     })
-
     .catch((err) =>
       res.status(404).json({
         noStations: 'No stations found',
@@ -22,9 +25,10 @@ router.get('/', (req, res) => {
 // @access Public
 router.get('/:id', (req, res) => {
   Station.findById(req.params.id)
+    .lean()
     .then((station) => {
-      console.log(station)
-      res.json(station)
+      console.log(station.readings)
+      res.render('station', station)
     })
     .catch((err) =>
       res.status(404).json({
@@ -39,10 +43,10 @@ router.get('/:id', (req, res) => {
 router.post('/add', (req, res) => {
   console.log(req.body)
   Station.create(req.body)
-    .then((station) =>
-      console.log({ msg: 'Station added successfully' }),
+    .then((station) => console.log({ msg: 'Station added successfully' }))
+    .then(() => {
       res.redirect('/')
-    )
+    })
     .catch((err) => {
       console.log(err.message)
       res.status(400).json({ error: 'Unable to add this station' })
@@ -65,16 +69,48 @@ router.put('/:id/update', (req, res) => {
 // @route DELETE api/stations/:id
 // @description Delete station by id
 // @access Public
-router.delete('/delete/:id', (req, res) => {
-  const item = Station.findById(req.params.id);
-    if (!item) throw Error('No item found');
-  Station.remove(req.params.id)
-    .then((station) =>
-      res.json({ mgs: 'Station entry deleted successfully' })
-    )
-    .catch((err) =>
-      res.status(404).json({ error: 'No such station' })
-    )
+router.get('/delete/:id', (req, res) => {
+  Station.findByIdAndDelete(req.params.id)
+    .then((data) => console.log(`${data} was deleted`))
+    .then(() => res.redirect('/'))
+    .catch((err) => {
+      res.status(400).json({
+        error: 'Unable to delete station',
+      })
+    })
+})
+
+router.post('/:id/addreading', (req, res) => {
+  const reading = new Reading(req.body)
+  Station.findByIdAndUpdate(req.params.id, { $push: { readings: reading } })
+    .then(() => {
+      res.redirect('/stations/' + req.params.id)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
+
+router.post('/:id/autogenerate', async (req, res) => {
+  const station = await Station.findById(req.params.id)
+  fetch(
+    `https://api.openweathermap.org/data/2.5/weather?lat=${station.lat}&lon=${station.lng}&appid=bf3bd20a9d02842cac7dd1d0f4a358d2`
+  )
+    .then((response) => response.json())
+    .then((result) => {
+      station.readings.push({
+        code: result.cod,
+        temperature: result.main.temp,
+        windSpeed: result.wind.speed,
+        windDirection: result.wind.deg,
+        pressure: result.main.pressure,
+      })
+    })
+    .then(() => {
+      station.save()
+      res.redirect('/stations/' + req.params.id)
+    })
+    .catch((err) => console.log(err))
 })
 
 module.exports = router

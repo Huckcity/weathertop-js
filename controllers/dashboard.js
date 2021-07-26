@@ -1,12 +1,19 @@
-const { response } = require('express')
+const Station = require("../models/Station")
 
 const dashboard = {
-    index(req, res) {
+    async index(req, res) {
+        const stations = await Station.find().lean()
+            .then(data => {
+                return data
+            })
+            .catch(err => {
+                console.log(err)
+            })
         const viewData = {
-            title: 'Stations dashboard',
-            stations: 'to be an array',
+            stations
         }
-        response.render('dashboard', viewData)
+        console.log(viewData)
+        res.render('dashboard', viewData)
     },
 }
 

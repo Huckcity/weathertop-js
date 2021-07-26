@@ -1,6 +1,4 @@
 const router = require('express').Router()
-const dashboard = require('../../controllers/dashboard.js')
-
 const Station = require('../../models/Station')
 
 // @route GET api/stations
@@ -42,7 +40,8 @@ router.post('/add', (req, res) => {
   console.log(req.body)
   Station.create(req.body)
     .then((station) =>
-      res.json({ msg: 'Station added successfully' })
+      console.log({ msg: 'Station added successfully' }),
+      res.redirect('/')
     )
     .catch((err) => {
       console.log(err.message)
@@ -66,8 +65,10 @@ router.put('/:id/update', (req, res) => {
 // @route DELETE api/stations/:id
 // @description Delete station by id
 // @access Public
-router.delete('/:id/delete', (req, res) => {
-  Station.findByIdAndRemove(req.params.id, req.body)
+router.delete('/delete/:id', (req, res) => {
+  const item = Station.findById(req.params.id);
+    if (!item) throw Error('No item found');
+  Station.remove(req.params.id)
     .then((station) =>
       res.json({ mgs: 'Station entry deleted successfully' })
     )

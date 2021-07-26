@@ -2,14 +2,7 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const port = 3000
 const path = require('path')
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-const stationRoutes = require('./routes/api/stations')
-const dashboardRoutes = require('./controllers/dashboard')
 
 // set up db
 const mongoose = require('mongoose')
@@ -33,7 +26,6 @@ connectDB()
 
 // set template engine to handlbars
 const exphbs = require('express-handlebars')
-app.set('view engine', '.hbs')
 app.engine(
   '.hbs',
   exphbs({
@@ -41,15 +33,20 @@ app.engine(
     defaultLayout: 'main',
   })
 )
+app.set('view engine', '.hbs')
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
 
 // set routes
+const routes = require('./routes/routes')
+const stationRoutes = require('./routes/api/stations')
 app.use('/stations', stationRoutes)
-app.use('/', dashboardRoutes)
-
+app.use('/', routes)
 // start server
-app.listen(port, () => {
-  console.log(`Example app listening on http://localhost:${port}`)
+app.listen(3000, () => {
+  console.log(`Example app listening on http://localhost:3000`)
 })

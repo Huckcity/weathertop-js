@@ -1,7 +1,20 @@
 {{> menu id="dashboard"}}
 
-<section class="">
-  {{viewData}}
-  {{title}}
-  {{> liststations stations}}
+<section class="container d-flex w-100 justify-space-around">
+  {{> liststations }}
+</section>
+
+<section>
+  <form action="/stations/add" method="POST">
+    <label for="name">Station Name:</label>
+    <input type="text" name="name">
+
+    <label for="lat">Latitude:</label>
+    <input type="number" name="lat">
+
+    <label for="lng">Longitude:</label>
+    <input type="number" name="lng">
+
+    <button type="submit">Submit</button>
+  </form>
 </section>

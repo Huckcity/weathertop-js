@@ -94,7 +94,7 @@ router.post('/:id/addreading', (req, res) => {
 router.post('/:id/autogenerate', async (req, res) => {
   const station = await Station.findById(req.params.id)
   fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${station.lat}&lon=${station.lng}&appid=bf3bd20a9d02842cac7dd1d0f4a358d2`
+    `https://api.openweathermap.org/data/2.5/weather?lat=${station.lat}&lon=${station.lng}&appid=${process.env.OPENWEATHERAPI_KEY}`
   )
     .then((response) => response.json())
     .then((result) => {

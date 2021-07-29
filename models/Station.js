@@ -16,7 +16,7 @@ const StationSchema = new mongoose.Schema({
   },
   readings: {
     type: [ReadingSchema.schema],
-    default: undefined,
+    default: [],
   },
   created_on: {
     type: Date,

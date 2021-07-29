@@ -46,9 +46,8 @@ app.use(
 
 // set routes
 const routes = require('./routes/routes')
-const stationRoutes = require('./routes/api/stations')
-app.use('/stations', stationRoutes)
 app.use('/', routes)
+
 // start server
 app.listen(3000, () => {
   console.log(`Example app listening on http://localhost:3000`)

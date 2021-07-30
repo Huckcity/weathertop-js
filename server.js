@@ -1,8 +1,34 @@
 // Server setup
 require('dotenv').config()
 const express = require('express')
-const app = express()
 const path = require('path')
+
+const session = require('express-session')
+const redis = require('redis')
+const redisClient = redis.createClient()
+const redisStore = require('connect-redis')(session)
+
+const app = express()
+
+redisClient.on('error', err => {
+  console.log(`Redis error: ${err}`)
+})
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    name: 'weathertopLogin',
+    saveUninitialized: true,
+    cookie: { secure: false },
+    store: new redisStore({
+      host: 'localhost',
+      port: 6379,
+      client: redisClient,
+      ttl: 86400,
+    }),
+  })
+)
 
 // set up db
 const mongoose = require('mongoose')
@@ -45,8 +71,18 @@ app.use(
 )
 
 // set routes
-const routes = require('./routes/routes')
-app.use('/', routes)
+const publicRoutes = require('./routes/public')
+const privateRoutes = require('./routes/private')
+app.use('/', publicRoutes)
+
+app.use(function (req, res, next) {
+  if (!req.session.loggedIn) {
+    return res.status(403).redirect('/')
+  }
+  next()
+})
+
+app.use('/', privateRoutes)
 
 // start server
 app.listen(3000, () => {

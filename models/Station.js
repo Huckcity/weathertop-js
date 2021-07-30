@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb')
 const mongoose = require('mongoose')
 const ReadingSchema = require('./Reading')
 
@@ -21,6 +22,10 @@ const StationSchema = new mongoose.Schema({
   created_on: {
     type: Date,
     default: Date.now,
+  },
+  userId: {
+    type: ObjectId,
+    required: true,
   },
 })
 

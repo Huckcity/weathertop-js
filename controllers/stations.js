@@ -1,4 +1,5 @@
 const fetch = require('node-fetch')
+const auth = require('../utils/auth')
 const Station = require('../models/Station')
 const Reading = require('../models/Reading')
 
@@ -7,7 +8,6 @@ const stations = {
     Station.findById(req.params.id)
       .lean()
       .then(station => {
-        console.log(station.readings)
         res.render('station', station)
       })
       .catch(err =>
@@ -17,10 +17,17 @@ const stations = {
       )
   },
   async addStation(req, res) {
-    Station.create(req.body)
+    const { name, lat, lng } = req.body
+    Station.create({
+      name,
+      lat,
+      lng,
+      readings: [],
+      userId: await auth.currentUserID(req.session.userId),
+    })
       .then(station => {
         console.log({ msg: 'Station added successfully:' + station })
-        res.redirect('/')
+        res.redirect('/dashboard')
       })
       .catch(err => {
         console.log(err.message)

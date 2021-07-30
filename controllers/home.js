@@ -5,19 +5,26 @@ const home = {
     res.render('landing')
   },
   async login(req, res) {
-    await User.findOne({ email: req.body.email }).then(
-      result => {
-        console.log(result)
-        if (result === null) {
-          res.render('landing', { msg: 'No user found' })
-        } else {
+    await User.findOne({ email: req.body.email })
+      .then(
+        user => {
+          if (user === null || user.password !== req.body.password) {
+            console.log('no user or bad password')
+            res.redirect('/')
+          }
+          req.session.loggedIn = true
+          req.session.username = user.username
+          req.session.userId = user._id
           res.redirect('/dashboard')
+        },
+        err => {
+          console.log('oopsie' + err)
         }
-      },
-      err => {
-        console.log('oopsie' + err)
-      }
-    )
+      )
+      .catch(err => {
+        console.log('unknown login error')
+        res.redirect('/')
+      })
   },
   register(req, res) {
     res.render('register')

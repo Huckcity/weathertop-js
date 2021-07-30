@@ -1,20 +1,31 @@
 const Station = require('../models/Station')
+const auth = require('../utils/auth')
 
 const dashboard = {
   async index(req, res) {
-    const stations = await Station.find()
-      .lean()
-      .then(data => {
-        return data
+    try {
+      const stations = await Station.find({
+        userId: req.session.userId,
       })
-      .catch(err => {
-        console.log(err)
-      })
-    const viewData = {
-      stations,
+        .lean()
+        .then(data => {
+          return data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      const viewData = {
+        stations,
+      }
+      res.render('dashboard', viewData)
+    } catch (err) {
+      console.log(`Error rendering dashboard`)
     }
-    console.log(viewData)
-    res.render('dashboard', viewData)
+  },
+  logout(req, res) {
+    req.session.loggedIn = false
+    req.session.destroy()
+    res.redirect('/')
   },
 }
 

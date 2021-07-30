@@ -1,18 +1,11 @@
-const express = require('express')
-const router = express.Router()
+const router = require('express').Router()
 
-const home = require('../controllers/home')
 const dashboard = require('../controllers/dashboard')
 const stations = require('../controllers/stations')
 
-/*** Home Routes ***/
-router.get('/', home.index)
-router.get('/register', home.register)
-router.post('/register', home.doRegistration)
-router.get('/about', home.about)
-router.post('/login', home.login)
 /*** Dashboard Routes ***/
 router.get('/dashboard', dashboard.index)
+router.get('/logout', dashboard.logout)
 
 /*** Station Routes ***/
 // Find station by ID

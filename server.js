@@ -2,13 +2,12 @@
 require('dotenv').config()
 const express = require('express')
 const path = require('path')
+const app = express()
 
 const session = require('express-session')
 const redis = require('redis')
-const redisClient = redis.createClient()
+const redisClient = redis.createClient(process.env.REDIS_URL)
 const redisStore = require('connect-redis')(session)
-
-const app = express()
 
 redisClient.on('error', err => {
   console.log(`Redis error: ${err}`)

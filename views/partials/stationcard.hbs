@@ -6,9 +6,29 @@
       <p class='card-subtitle mb-2 text-muted'>Lng: {{station.lng}}</p>
     </div>
     <div class='w-75 d-flex flex-wrap'>
-      <div class='station-latest'>Weather ICON</div>
-      <div class='station-latest'>Temperature ICON</div>
-      <div class='station-latest'>Wind ICON</div>
+      <div class='station-latest'>Weather ICON:
+        {{station.latestWeatherDesc}}</div>
+      <div class='station-latest'>Temperature:<br />
+        {{station.latestTemp}}C
+        <br />
+        {{station.latestTempInFahrenheit}}F
+        <br />
+        Max:
+        {{station.maxTemp}}
+        <br />
+        Min:
+        {{station.minTemp}}</div>
+      <div class='station-latest'>Wind:<br />
+        {{station.windBeaufort}}bft
+        <br />
+        {{station.windDirection}}
+        <br />
+        {{station.windChill}}
+        <br />
+        {{station.maxWindSpeed}}
+        <br />
+        {{station.minWindSpeed}}
+      </div>
       <div class='station-latest'>Pressure ICON</div>
     </div>
   </div>

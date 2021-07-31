@@ -22,7 +22,7 @@ app.use(
     saveUninitialized: true,
     cookie: { secure: false },
     store: new redisStore({
-      host: 'localhost',
+      host: process.env.REDIS_URL,
       port: 6379,
       client: redisClient,
       ttl: 86400,
@@ -57,6 +57,7 @@ app.engine(
   exphbs({
     extname: '.hbs',
     defaultLayout: 'main',
+    helpers: require('./utils/helpers'),
   })
 )
 app.set('view engine', '.hbs')

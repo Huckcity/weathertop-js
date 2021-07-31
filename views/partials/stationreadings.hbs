@@ -58,7 +58,7 @@
     <table class='table table-hover'>
       <thead>
         <tr>
-          <th scope='col'>#</th>
+          <th scope='col'>Date</th>
           <th scope='col'>Code</th>
           <th scope='col'>Temp</th>
           <th scope='col'>Wind Speed</th>
@@ -69,7 +69,7 @@
       <tbody>
         {{#each station.readings}}
           <tr>
-            <th scope='row'>{{@key}}</th>
+            <th scope='row'>{{{dateFormat created_on}}}</th>
             <td>{{code}}</td>
             <td>{{temperature}}</td>
             <td>{{windSpeed}}</td>

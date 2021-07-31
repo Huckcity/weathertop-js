@@ -15,6 +15,9 @@ const dashboard = {
         .catch(err => {
           console.log(err)
         })
+      stations.forEach(station => {
+        stationUtils.generateLatestWeather(station)
+      })
       const viewData = {
         stations: stationUtils.sortStationsAlphabetically(stations),
       }

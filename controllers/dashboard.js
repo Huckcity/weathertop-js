@@ -1,5 +1,6 @@
 const Station = require('../models/Station')
 const auth = require('../utils/auth')
+const stationUtils = require('../utils/station')
 
 const dashboard = {
   async index(req, res) {
@@ -15,7 +16,7 @@ const dashboard = {
           console.log(err)
         })
       const viewData = {
-        stations,
+        stations: stationUtils.sortStationsAlphabetically(stations),
       }
       res.render('dashboard', viewData)
     } catch (err) {

@@ -11,6 +11,7 @@ const home = {
           if (user === null || user.password !== req.body.password) {
             console.log('no user or bad password')
             res.redirect('/')
+            return
           }
           req.session.loggedIn = true
           req.session.username = user.username

@@ -2,19 +2,21 @@ const fetch = require('node-fetch')
 const auth = require('../utils/auth')
 const Station = require('../models/Station')
 const Reading = require('../models/Reading')
+const stationUtils = require('../utils/station')
 
 const stations = {
   async findOne(req, res) {
     Station.findById(req.params.id)
       .lean()
       .then(station => {
-        res.render('station', station)
+        const chartData = stationUtils.generateChartData(station)
+        const viewData = {
+          station,
+          chartData,
+        }
+        res.render('station', viewData)
       })
-      .catch(err =>
-        res.status(404).json({
-          noStations: 'No station found for id: ' + req.params.id,
-        })
-      )
+      .catch(err => console.log(err))
   },
   async addStation(req, res) {
     const { name, lat, lng } = req.body

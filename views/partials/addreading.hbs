@@ -1,5 +1,9 @@
 <section>
-  <form action='/stations/{{_id}}/addreading' method='post' class='form'>
+  <form
+    action='/stations/{{station._id}}/addreading'
+    method='post'
+    class='form'
+  >
     <div class='mb-3'>
       <label class='form-label' for='code'>Code</label>
       <select class='form-control' name='code' id='code' class='form-input'>

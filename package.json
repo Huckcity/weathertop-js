@@ -4,6 +4,7 @@
     "description": "Weathertop 2 ICT Assignment",
     "main": "server.js",
     "scripts": {
+        "start": "node server.js",
         "dev": "nodemon server.js"
     },
     "author": "Adam Gibbons",

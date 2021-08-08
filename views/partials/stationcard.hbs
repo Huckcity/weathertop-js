@@ -5,10 +5,20 @@
       <p class='card-subtitle mb-2 text-muted'>Lat: {{station.lat}}</p>
       <p class='card-subtitle mb-2 text-muted'>Lng: {{station.lng}}</p>
     </div>
-    <div class='w-75 d-flex flex-wrap'>
-      <div class='station-latest'>Weather ICON:
+    <div class='w-75 d-flex flex-wrap justify-content-around'>
+      <div class='station-latest'>
+        <span class='card-icons'>
+          <i
+            class='bi {{station.latestWeatherIcon}}'
+            style='font-size: 2rem; color: cornflowerblue;'
+          ></i>
+        </span>
         {{station.latestWeatherDesc}}</div>
-      <div class='station-latest'>Temperature:<br />
+      <div class='station-latest'>
+        <span class='card-icons'>
+          <i class='bi bi-thermometer' style='font-size: 2em; color: rgb(150, 47, 47)'></i>
+        </span>
+        Temperature<br />
         {{station.latestTemp}}C
         <br />
         {{station.latestTempInFahrenheit}}F
@@ -18,7 +28,11 @@
         <br />
         Min:
         {{station.minTemp}}</div>
-      <div class='station-latest'>Wind:<br />
+      <div class='station-latest'>
+        <span class='card-icons'>
+          <i class='bi bi-wind' style='font-size: 2em; color: rgb(68, 150, 47)'></i>
+        </span>
+        Wind<br />
         {{station.windBeaufort}}bft
         <br />
         {{station.windDirection}}
@@ -29,7 +43,22 @@
         <br />
         {{station.minWindSpeed}}
       </div>
-      <div class='station-latest'>Pressure ICON</div>
+      <div class='station-latest'>
+        <span class='card-icons'>
+          <i
+            class='bi bi-bounding-box-circles'
+            style='font-size: 2em; color: rgb(47, 150, 141)'
+          ></i>
+        </span>
+        Pressure
+        <br />
+        {{station.latestPressure}}
+        <br />
+        Max:
+        {{station.maxPressure}}
+        <br />
+        Min:
+        {{station.minPressure}}</div>
     </div>
   </div>
 </div>

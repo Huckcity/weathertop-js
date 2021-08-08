@@ -12,12 +12,12 @@ router.get('/logout', dashboard.logout)
 router.get('/stations/:id', stations.findOne)
 // Add station
 router.post('/stations/add', stations.addStation)
-// Update station
-router.put('/stations/:id/update', stations.updateStation)
 // Delete station
 router.get('/stations/delete/:id', stations.deleteStation)
 // Add reading to station
 router.post('/stations/:id/addreading', stations.addReading)
+// Detele reading from station
+router.get('/stations/:station_id/delete/:reading_id', stations.deleteReading)
 // Add OpenWeatherAPI reading to station
 router.post('/stations/:id/autogenerate', stations.addAPIReading)
 

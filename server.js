@@ -1,5 +1,6 @@
 // Server setup
 require('dotenv').config()
+const PORT = process.env.PORT || 3000
 const express = require('express')
 const path = require('path')
 const app = express()
@@ -31,6 +32,7 @@ app.use(
 
 // set up db
 const mongoose = require('mongoose')
+mongoose.set('useFindAndModify', false)
 const db = process.env.MONGODB_URI
 const connectDB = async () => {
   try {
@@ -40,7 +42,7 @@ const connectDB = async () => {
         useUnifiedTopology: true,
       })
       .then(() => {
-        console.log('connented to db')
+        console.log('Connected to MongoDB')
       })
   } catch (error) {
     console.error(error.message)
@@ -69,6 +71,10 @@ app.use(
   '/bootstrap',
   express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js'))
 )
+app.use(
+  '/bs-icons',
+  express.static(path.join(__dirname, 'node_modules/bootstrap-icons/font'))
+)
 
 // set routes
 const publicRoutes = require('./routes/public')
@@ -85,6 +91,6 @@ app.use(function (req, res, next) {
 app.use('/', privateRoutes)
 
 // start server
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`Example app listening on http://localhost:3000`)
+app.listen(PORT, () => {
+  console.log(`Weathertop app listening on port ${PORT}`)
 })

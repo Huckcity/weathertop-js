@@ -64,6 +64,7 @@
           <th scope='col'>Wind Speed</th>
           <th scope='col'>Wind Direction</th>
           <th scope='col'>Pressure</th>
+          <th scope='col'></th>
         </tr>
       </thead>
       <tbody>
@@ -75,6 +76,10 @@
             <td>{{windSpeed}}</td>
             <td>{{windDirection}}</td>
             <td>{{pressure}}</td>
+            <td><a href='/stations/{{../station._id}}/delete/{{_id}}'><i
+                  class='bi bi-x-circle'
+                  onclick="return confirm('Are you sure?');"
+                ></i></a></td>
           </tr>
         {{/each}}
       </tbody>
@@ -106,14 +111,14 @@
   </div>
 </div>
 
-<script>
-  const tempChart = new frappe.Chart('#tempChart', {
+<script type='text/javascript'>
+const tempChart = new frappe.Chart('#tempChart', {
     title: 'Temperature Trends',
     data: {{{chartData.temperatureChart}}},
     type: 'line',
     height: 250,
     colors: ['#7cd6fd', '#743ee2'],
-  })
+  });
 
   const pressureChart = new frappe.Chart('#pressureChart', {
     title: 'Pressure Trends',
@@ -121,7 +126,7 @@
     type: 'line',
     height: 250,
     colors: ['#7cd6fd', '#743ee2'],
-  })
+  });
 
   const windChart = new frappe.Chart('#windChart', {
     title: 'Wind Speed Trends',
@@ -129,7 +134,7 @@
     type: 'line',
     height: 250,
     colors: ['#7cd6fd', '#743ee2'],
-  })
+  });
 
   /*****
   Slightly nasty hack to force charts to redraw when
@@ -141,5 +146,5 @@
     pressureChart.draw(!0)
     windChart.draw(!0)
     }, 200)
-  }) 
+  });
 </script>

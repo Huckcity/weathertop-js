@@ -25,6 +25,10 @@ const ReadingSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  auto_gen: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 module.exports = Reading = mongoose.model('reading', ReadingSchema)

@@ -5,6 +5,10 @@ const auth = {
     const user = await User.findById(id)
     return user._id
   },
+  async currentUserInfo(id) {
+    const user = await User.findById(id)
+    return user
+  },
 }
 
 module.exports = auth

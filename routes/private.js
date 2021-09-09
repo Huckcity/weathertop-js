@@ -3,9 +3,14 @@ const router = require('express').Router()
 const dashboard = require('../controllers/dashboard')
 const stations = require('../controllers/stations')
 
+// Generic error route
+router.get('/oops', dashboard.errorPage)
+
 /*** Dashboard Routes ***/
 router.get('/dashboard', dashboard.index)
 router.get('/logout', dashboard.logout)
+router.get('/profile', dashboard.profile)
+router.post('/updateProfile', dashboard.updateProfile)
 
 /*** Station Routes ***/
 // Find station by ID

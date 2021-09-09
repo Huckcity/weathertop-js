@@ -32,23 +32,30 @@ const home = {
   },
   async doRegistration(req, res) {
     const { username, email, password, repeatPassword } = req.body
-    if (password === repeatPassword) {
-      res.render('register', { msg: 'not good' })
-    }
-
-    const newUser = {
-      username,
-      email,
-      password,
-    }
-
-    await User.create(newUser, (err, result) => {
-      if (err) {
-        console.log(`there was a errrrr ${err}`)
-      } else {
-        console.log(`looks gooooooood ${result}`)
+    if (password !== repeatPassword) {
+      res.render('register', { msg: 'Passwords must match' })
+      return
+    } else {
+      const newUser = {
+        username,
+        email,
+        password,
       }
-    })
+
+      await User.create(newUser, (err, result) => {
+        if (err) {
+          console.log(`there was a errrrr ${err}`)
+          res.render('register', { msg: 'Error creating user account. Please try again later.' })
+          return
+        } else {
+          console.log(`New user created: ${result}`)
+          req.session.loggedIn = true
+          req.session.username = result.username
+          req.session.userId = result._id
+          res.redirect('/dashboard')
+        }
+      })
+    }
   },
   about(req, res) {
     res.render('about')

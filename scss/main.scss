@@ -20,3 +20,21 @@
 #mapid {
   height: 600px;
 }
+
+.search-list {
+  border-top: 1px solid lightslategray;
+  border-left: 1px solid lightslategray;
+  border-right: 1px solid lightslategray;
+  list-style: none;
+  padding-left: 0;
+  margin-top: 5px;
+}
+.searchresult-item {
+  padding: 10px;
+  width: 100%;
+  border-bottom: 1px solid lightslategray;
+}
+
+.searchresult-item:hover {
+  background-color: bisque;
+}

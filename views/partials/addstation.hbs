@@ -2,7 +2,8 @@
   <form action='/stations/add' method='POST'>
     <div class='mb-3'>
       <label class='form-label' for='name'>Station Name:</label>
-      <input class='form-control' type='text' name='name' required />
+      <input class='form-control' type='text' name='name' id='name' onkeyup='checkKey(event)' required />
+      <div id="searchresults" style="display: none;"></div>
     </div>
 
     <div class='mb-3'>
@@ -32,3 +33,49 @@
     <button class='btn btn-primary' type='submit'>Submit</button>
   </form>
 </section>
+
+<script>
+  var searchresults = document.getElementById('searchresults')
+
+  function checkKey(event) {
+    var key = event.keyCode || event.charCode;
+    if( key == 8 || key == 46 ) {
+      event.target.value = ""
+      resetSearch()
+      return false;
+    } else {
+      doStationLookup(event.target.value)
+    }
+  }
+
+  function doStationLookup(value) {
+    console.log(value);
+    if (value.length > 3) {      
+      fetch('http://api.openweathermap.org/geo/1.0/direct?q='+value+'&limit=5&appid=30f421b6200838c772f19b7f59ba98fb')
+      .then(response => response.json())
+      .then(result => {
+        console.log('did a lookup:'+result)
+        searchresults.style.display = 'block'
+        searchresults.innerHTML = ''
+        var ul = document.createElement("ul")
+        ul.setAttribute('class', 'search-list')
+        for (let i=0; i < result.length; i++) {
+          var li = document.createElement("li")
+          li.appendChild(document.createTextNode(result[i].name+', '+result[i].country))
+          li.setAttribute('class', 'searchresult-item')
+          ul.appendChild(li)
+        }
+        searchresults.appendChild(ul)
+      })
+      .catch(err => console.log(`there was an ${err}`))
+    }
+    if (value.length <= 3) {
+      resetSearch()
+    }
+  }
+
+function resetSearch() {
+  searchresults.style.display = 'none'
+  searchresults.innerHTML = ''
+}
+</script>

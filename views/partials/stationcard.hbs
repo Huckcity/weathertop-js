@@ -42,6 +42,9 @@
           <li>Max: {{maxTemp}}C</li>
           <li>Min: {{minTemp}}C</li>
         </ul>
+        <div class="trend">
+          <i class="bi bi-arrow-{{tempTrend}}"></i>
+        </div>
       </div>
       <div class="station-latest mx-2 my-1">
         <span class="card-icons">
@@ -58,6 +61,9 @@
           <li>Max: {{maxWindSpeed}}</li>
           <li>Min: {{minWindSpeed}}</li>
         </ul>
+        <div class="trend">
+          <i class="bi bi-arrow-{{windTrend}}"></i>
+        </div>
       </div>
       <div class="station-latest mx-2 my-1">
         <span class="card-icons">
@@ -72,6 +78,9 @@
           <li>Max: {{maxPressure}}</li>
           <li>Min: {{minPressure}}</li>
         </ul>
+        <div class="trend">
+          <i class="bi bi-arrow-{{pressureTrend}}"></i>
+        </div>
       </div>
     </div>
   </div>

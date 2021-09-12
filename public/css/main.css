@@ -3525,3 +3525,5 @@ label { font-weight: 500; }
 .form-right { padding: 2em; border-left: 3px solid #ccc; }
 
 .text-notblack { color: #413d3d; }
+
+.trend { position: absolute; bottom: 15px; right: 15px; }

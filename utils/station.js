@@ -29,6 +29,10 @@ const station = {
     station.windDirection = getWindDirection(latestReading.windDirection)
     station.windChill = getWindChill(latestReading.temperature, latestReading.windSpeed)
 
+    station.tempTrend = getTempTrend(station)
+    station.windTrend = getWindTrend(station)
+    station.pressureTrend = getPressureTrend(station)
+
     return station
   },
   generateChartData(station) {
@@ -231,5 +235,44 @@ const getLatestWeatherIcon = (code, auto_gen) => {
     }
   } else {
     return base_icons[code]
+  }
+}
+
+const getTempTrend = station => {
+  if (station.readings.length > 2) {
+    let lastThreeReadings = station.readings.slice(station.readings.length-3, station.readings.length)
+    if (lastThreeReadings[2].temperature > lastThreeReadings[1].temperature && lastThreeReadings[1].temperature > lastThreeReadings[0].temperature) {
+      return 'up'
+    }
+    if (lastThreeReadings[2].temperature < lastThreeReadings[1].temperature && lastThreeReadings[1].temperature < lastThreeReadings[0].temperature) {
+      return 'down'
+    }
+    return 'none'
+  }
+}
+
+const getWindTrend = station => {
+  if (station.readings.length > 2) {
+    let lastThreeReadings = station.readings.slice(station.readings.length-3, station.readings.length)
+    if (lastThreeReadings[2].windSpeed > lastThreeReadings[1].windSpeed && lastThreeReadings[1].windSpeed > lastThreeReadings[0].windSpeed) {
+      return 'up'
+    }
+    if (lastThreeReadings[2].windSpeed < lastThreeReadings[1].windSpeed && lastThreeReadings[1].windSpeed < lastThreeReadings[0].windSpeed) {
+      return 'down'
+    }
+    return 'none'
+  }
+}
+
+const getPressureTrend = station => {
+  if (station.readings.length > 2) {
+    let lastThreeReadings = station.readings.slice(station.readings.length-3, station.readings.length)
+    if (lastThreeReadings[2].pressure > lastThreeReadings[1].pressure && lastThreeReadings[1].pressure > lastThreeReadings[0].pressure) {
+      return 'up'
+    }
+    if (lastThreeReadings[2].pressure < lastThreeReadings[1].pressure && lastThreeReadings[1].pressure < lastThreeReadings[0].pressure) {
+      return 'down'
+    }
+    return 'none'
   }
 }

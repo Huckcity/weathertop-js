@@ -104,7 +104,7 @@ const stations = {
         })
       })
       .then(() => {
-        station.save()
+        await station.save()
         res.redirect('/stations/' + req.params.id)
       })
       .catch(err => console.log(`there was an ${err}`))

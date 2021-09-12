@@ -1,64 +1,78 @@
-<div class='card mt-3'>
-  <div class='card-body p-0 d-flex'>
-    <div class='w-25 p-3 flex-shrink-0'>
-      <h3 class='card-title'>{{station.name}}</h3>
-      <p class='card-subtitle mb-2 text-muted'>Lat: {{station.lat}}</p>
-      <p class='card-subtitle mb-2 text-muted'>Lng: {{station.lng}}</p>
+<div class="container dashboard-station-container mt-3">
+  <div class="row d-flex">
+    <div class="col col-4 col-lg-2 p-3 flex-shrink-0">
+      <h3 class="card-title text-notblack">{{name}}</h3>
+      <p class="card-subtitle mb-2 text-muted">Lat: {{lat}}</p>
+      <p class="card-subtitle mb-2 text-muted">Lng: {{lng}}</p>
+
+      {{#if dashboard}}
+        <div class="d-flex mx-2 mt-5 justify-content-around">
+          <a href="/stations/{{_id}}" class="btn btn-primary">View</a>
+          <a
+            href="/stations/delete/{{_id}}"
+            class="btn btn-danger"
+            onclick="return confirm('Are you sure?');"
+          >Delete</a>
+        </div>
+      {{/if}}
     </div>
-    <div class='w-75 d-flex flex-wrap justify-content-around'>
-      <div class='station-latest'>
-        <span class='card-icons'>
+    <div
+      class="col col-lg-10 d-flex flex-column flex-xl-row justify-content-around"
+    >
+      <div class="station-latest mx-2 my-1">
+        <span class="fs-3">{{latestWeatherDesc}}</span>
+        <div class="position-absolute top-50 start-50 translate-middle">
           <i
-            class='bi {{station.latestWeatherIcon}}'
-            style='font-size: 2rem; color: cornflowerblue;'
+            class="bi {{latestWeatherIcon}}"
+            style="font-size: 5rem; color: cornflowerblue;"
           ></i>
-        </span>
-        {{station.latestWeatherDesc}}</div>
-      <div class='station-latest'>
-        <span class='card-icons'>
-          <i class='bi bi-thermometer' style='font-size: 2em; color: rgb(150, 47, 47)'></i>
-        </span>
-        Temperature<br />
-        {{station.latestTemp}}C
-        <br />
-        {{station.latestTempInFahrenheit}}F
-        <br />
-        Max:
-        {{station.maxTemp}}
-        <br />
-        Min:
-        {{station.minTemp}}</div>
-      <div class='station-latest'>
-        <span class='card-icons'>
-          <i class='bi bi-wind' style='font-size: 2em; color: rgb(68, 150, 47)'></i>
-        </span>
-        Wind<br />
-        {{station.windBeaufort}}bft
-        <br />
-        {{station.windDirection}}
-        <br />
-        {{station.windChill}}
-        <br />
-        {{station.maxWindSpeed}}
-        <br />
-        {{station.minWindSpeed}}
+        </div>
       </div>
-      <div class='station-latest'>
-        <span class='card-icons'>
+      <div class="station-latest mx-2 my-1">
+        <span class="card-icons">
           <i
-            class='bi bi-bounding-box-circles'
-            style='font-size: 2em; color: rgb(47, 150, 141)'
+            class="bi bi-thermometer"
+            style="font-size: 2em; color: rgb(150, 47, 47)"
           ></i>
         </span>
-        Pressure
-        <br />
-        {{station.latestPressure}}
-        <br />
-        Max:
-        {{station.maxPressure}}
-        <br />
-        Min:
-        {{station.minPressure}}</div>
+        <span class="fs-4">Temperature</span>
+        <ul class="mt-3">
+          <li>{{latestTemp}}C</li>
+          <li>{{latestTempInFahrenheit}}F</li>
+          <li>Max: {{maxTemp}}C</li>
+          <li>Min: {{minTemp}}C</li>
+        </ul>
+      </div>
+      <div class="station-latest mx-2 my-1">
+        <span class="card-icons">
+          <i
+            class="bi bi-wind"
+            style="font-size: 2em; color: rgb(68, 150, 47)"
+          ></i>
+        </span>
+        <span class="fs-4">Wind</span>
+        <ul class="mt-3">
+          <li>{{windBeaufort}}bft</li>
+          <li>{{windDirection}}</li>
+          <li>Feels like {{windChill}}</li>
+          <li>Max: {{maxWindSpeed}}</li>
+          <li>Min: {{minWindSpeed}}</li>
+        </ul>
+      </div>
+      <div class="station-latest mx-2 my-1">
+        <span class="card-icons">
+          <i
+            class="bi bi-bounding-box-circles"
+            style="font-size: 2em; color: rgb(47, 150, 141)"
+          ></i>
+        </span>
+        <span class="fs-4">Pressure</span>
+        <ul class="mt-3">
+          <li>{{latestPressure}}hba</li>
+          <li>Max: {{maxPressure}}</li>
+          <li>Min: {{minPressure}}</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

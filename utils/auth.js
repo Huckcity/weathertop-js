@@ -6,7 +6,7 @@ const auth = {
     return user._id
   },
   async currentUserInfo(id) {
-    const user = await User.findById(id)
+    const user = await User.findById(id).lean()
     return user
   },
 }

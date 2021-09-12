@@ -1,14 +1,25 @@
-@import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import "./custom_variables";
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+label {
+  font-weight: 500;
+}
+
+.dashboard-station-container {
+  padding: 1em;
+  border: 1px solid rgba(168, 161, 161, 0.2);
+  border-radius: 10px;
+}
 
 .station-latest {
   position: relative;
-  background-color: black;
-  color: white;
-  border-radius: 5px;
-  flex-grow: 1;
-  margin: 0 1em;
+  background-color: $lightinputborder;
+  color: $notblack;
+  border-radius: 10px;
   padding: 1em;
-  width: 200px;
+  flex: 1;
+  min-height: 200px;
+  min-width: 200px;
 }
 
 .card-icons {
@@ -22,9 +33,10 @@
 }
 
 .search-list {
-  border-top: 1px solid lightslategray;
-  border-left: 1px solid lightslategray;
-  border-right: 1px solid lightslategray;
+  border-top: 1px solid $lightinputborder;
+  border-left: 1px solid $lightinputborder;
+  border-right: 1px solid $lightinputborder;
+  border-radius: 5px;
   list-style: none;
   padding-left: 0;
   margin-top: 5px;
@@ -32,9 +44,22 @@
 .searchresult-item {
   padding: 10px;
   width: 100%;
-  border-bottom: 1px solid lightslategray;
+  border-bottom: 1px solid $lightinputborder;
 }
 
 .searchresult-item:hover {
   background-color: bisque;
+}
+
+.readings-table {
+  color: $notblack;
+}
+
+.form-right {
+  padding: 2em;
+  border-left: 3px solid #ccc;
+}
+
+.text-notblack {
+  color: $notblack;
 }

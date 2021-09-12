@@ -8,18 +8,12 @@ const dashboard = {
     try {
       const stations = await Station.find({
         userId: req.session.userId,
-      })
-        .lean()
-        .then(data => {
-          return data
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      }).lean()
 
       // Generate stats and add to stations
       stations.forEach(station => {
-        stationUtils.generateLatestWeather(station)
+        if (station.readings.length > 0)
+          stationUtils.generateLatestWeather(station)
       })
 
       const viewData = {
@@ -27,7 +21,7 @@ const dashboard = {
       }
       res.render('dashboard', viewData)
     } catch (err) {
-      console.log(`Error rendering dashboard`)
+      console.log(`Error rendering dashboard: ${err}`)
       res.redirect('/oops')
     }
   },
@@ -38,23 +32,57 @@ const dashboard = {
   },
   async profile(req, res) {
     const currentUser = await auth.currentUserInfo(req.session.userId)
-    res.render('profile', currentUser)
+    const viewData = {
+      user: currentUser,
+      msg: req.session.msg,
+      err: req.session.err
+    }
+    req.session.msg = null;
+    req.session.err = null;
+    res.render('profile', viewData)
   },
   async updateProfile(req, res) {
     const currentUser = await auth.currentUserInfo(req.session.userId)
-    User.findByIdAndUpdate(currentUser._id, {
-      $set: {
-        fname: req.body.fname,
-        lname: req.body.lname,
-      },
-    })
+
+    if (req.body.old_password) {
+      if (req.body.old_password === currentUser.password && req.body.new_password && req.body.new_password === req.body.repeat_password) {
+        User.findByIdAndUpdate(currentUser._id, {
+          $set: {
+            fname: req.body.fname,
+            lname: req.body.lname,
+            password: req.body.new_password
+          },
+        })
+        .then(() => {
+          req.session.msg = 'Profile updated.'
+          res.redirect('/profile')
+        })
+        .catch(err => {
+          console.log(err)
+          req.session.err = 'Error updating profile. Please try again later.'
+          res.redirect('/profile')
+        })
+      } else {
+        req.session.err = 'Incorrect password or password mismatch.'
+        res.redirect('/profile')
+      }
+    } else {
+      User.findByIdAndUpdate(currentUser._id, {
+        $set: {
+          fname: req.body.fname,
+          lname: req.body.lname,
+        },
+      })
       .then(() => {
+        req.session.msg = 'Profile updated.'
         res.redirect('/profile')
       })
       .catch(err => {
         console.log(err)
-        res.redirect('/oops')
+        req.session.err = 'Error updating profile. Please try again later.'
+        res.redirect('/profile')
       })
+    }
   },
   errorPage(req, res) {
     res.render('errorPage')

@@ -1,116 +1,117 @@
-<ul class='nav nav-tabs' id='myTab' role='tablist'>
-  <li class='nav-item' role='presentation'>
-    <button
-      class='nav-link active'
-      id='readings-tab'
-      data-bs-toggle='tab'
-      data-bs-target='#readings'
-      type='button'
-      role='tab'
-      aria-controls='readings'
-      aria-selected='true'
-    >Readings</button>
-  </li>
-  <li class='nav-item' role='presentation'>
-    <button
-      class='nav-link'
-      id='temp-tab'
-      data-bs-toggle='tab'
-      data-bs-target='#temp'
-      type='button'
-      role='tab'
-      aria-controls='temp'
-      aria-selected='false'
-    >Temperature</button>
-  </li>
-  <li class='nav-item' role='presentation'>
-    <button
-      class='nav-link'
-      id='pressure-tab'
-      data-bs-toggle='tab'
-      data-bs-target='#pressure'
-      type='button'
-      role='tab'
-      aria-controls='pressure'
-      aria-selected='false'
-    >Pressure</button>
-  </li>
-  <li class='nav-item' role='presentation'>
-    <button
-      class='nav-link'
-      id='windspeed-tab'
-      data-bs-toggle='tab'
-      data-bs-target='#windspeed'
-      type='button'
-      role='tab'
-      aria-controls='windspeed'
-      aria-selected='false'
-    >Wind Speed</button>
-  </li>
-</ul>
-<div class='tab-content' id='myTabContent'>
-  <div
-    class='tab-pane fade show active'
-    id='readings'
-    role='tabpanel'
-    aria-labelledby='readings-tab'
-  >
-    <table class='table table-hover'>
-      <thead>
-        <tr>
-          <th scope='col'>Date</th>
-          <th scope='col'>Code</th>
-          <th scope='col'>Temp</th>
-          <th scope='col'>Wind Speed</th>
-          <th scope='col'>Wind Direction</th>
-          <th scope='col'>Pressure</th>
-          <th scope='col'></th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each station.readings}}
+<section class="container my-4">
+  <ul class='nav nav-tabs' id='myTab' role='tablist'>
+    <li class='nav-item' role='presentation'>
+      <button
+        class='nav-link active'
+        id='readings-tab'
+        data-bs-toggle='tab'
+        data-bs-target='#readings'
+        type='button'
+        role='tab'
+        aria-controls='readings'
+        aria-selected='true'
+      >Readings</button>
+    </li>
+    <li class='nav-item' role='presentation'>
+      <button
+        class='nav-link'
+        id='temp-tab'
+        data-bs-toggle='tab'
+        data-bs-target='#temp'
+        type='button'
+        role='tab'
+        aria-controls='temp'
+        aria-selected='false'
+      >Temperature</button>
+    </li>
+    <li class='nav-item' role='presentation'>
+      <button
+        class='nav-link'
+        id='pressure-tab'
+        data-bs-toggle='tab'
+        data-bs-target='#pressure'
+        type='button'
+        role='tab'
+        aria-controls='pressure'
+        aria-selected='false'
+      >Pressure</button>
+    </li>
+    <li class='nav-item' role='presentation'>
+      <button
+        class='nav-link'
+        id='windspeed-tab'
+        data-bs-toggle='tab'
+        data-bs-target='#windspeed'
+        type='button'
+        role='tab'
+        aria-controls='windspeed'
+        aria-selected='false'
+      >Wind Speed</button>
+    </li>
+  </ul>
+  <div class='tab-content' id='myTabContent'>
+    <div
+      class='tab-pane fade show active'
+      id='readings'
+      role='tabpanel'
+      aria-labelledby='readings-tab'
+    >
+      <table class='table table-sm table-hover readings-table'>
+        <thead>
           <tr>
-            <th scope='row'>{{{dateFormat created_on}}}</th>
-            <td>{{code}}</td>
-            <td>{{temperature}}</td>
-            <td>{{windSpeed}}</td>
-            <td>{{windDirection}}</td>
-            <td>{{pressure}}</td>
-            <td><a href='/stations/{{../station._id}}/delete/{{_id}}'><i
-                  class='bi bi-x-circle'
-                  onclick="return confirm('Are you sure?');"
-                ></i></a></td>
+            <th scope='col'>Date</th>
+            <th scope='col'>Code</th>
+            <th scope='col'>Temp</th>
+            <th scope='col'>Wind Speed</th>
+            <th scope='col'>Wind Direction</th>
+            <th scope='col'>Pressure</th>
+            <th scope='col'></th>
           </tr>
-        {{/each}}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {{#each station.readings}}
+            <tr>
+              <td scope='row'>{{{dateFormat created_on}}}</td>
+              <td>{{code}}</td>
+              <td>{{temperature}}</td>
+              <td>{{windSpeed}}</td>
+              <td>{{windDirection}}</td>
+              <td>{{pressure}}</td>
+              <td><a href='/stations/{{../station._id}}/delete/{{_id}}'><i
+                    class='bi bi-x-circle'
+                    onclick="return confirm('Are you sure?');"
+                  ></i></a></td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div
+      class='tab-pane fade'
+      id='temp'
+      role='tabpanel'
+      aria-labelledby='temp-tab'
+    >
+      <div id='tempChart'></div>
+    </div>
+    <div
+      class='tab-pane fade'
+      id='pressure'
+      role='tabpanel'
+      aria-labelledby='pressure-tab'
+    >
+      <div id='pressureChart'></div>
+    </div>
+    <div
+      class='tab-pane fade'
+      id='windspeed'
+      role='tabpanel'
+      aria-labelledby='windspeed-tab'
+    >
+      <div id='windChart'></div>
+    </div>
   </div>
-  <div
-    class='tab-pane fade'
-    id='temp'
-    role='tabpanel'
-    aria-labelledby='temp-tab'
-  >
-    <div id='tempChart'></div>
-  </div>
-  <div
-    class='tab-pane fade'
-    id='pressure'
-    role='tabpanel'
-    aria-labelledby='pressure-tab'
-  >
-    <div id='pressureChart'></div>
-  </div>
-  <div
-    class='tab-pane fade'
-    id='windspeed'
-    role='tabpanel'
-    aria-labelledby='windspeed-tab'
-  >
-    <div id='windChart'></div>
-  </div>
-</div>
-
+</section>
 <script type='text/javascript'>
 console.log({{{chartData.pressureChart}}})
 const tempChart = new frappe.Chart('#tempChart', {

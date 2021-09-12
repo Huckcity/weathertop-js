@@ -9,8 +9,10 @@ const stations = {
     Station.findById(req.params.id)
       .lean()
       .then(station => {
+        if (station.readings.length > 0)
+          stationUtils.generateLatestWeather(station)
         const viewData = {
-          station: stationUtils.generateLatestWeather(station),
+          station,
           chartData: stationUtils.generateChartData(station),
         }
         res.render('station', viewData)

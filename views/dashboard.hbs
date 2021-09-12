@@ -2,11 +2,7 @@
 
 <section class="d-flex flex-column w-100 justify-content-between">
   {{#each stations}}
-    {{> stationcard station=this}}
-    <div class="d-flex">
-      <a href='/stations/{{_id}}' class='btn btn-secondary'>View</a>
-      <a href='/stations/delete/{{_id}}' class='btn btn-warning' onclick="return confirm('Are you sure?');">Delete</a>
-    </div>
+    {{> stationcard dashboard=true }}
   {{/each}}
 </section>
 

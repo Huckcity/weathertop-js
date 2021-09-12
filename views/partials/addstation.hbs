@@ -9,6 +9,7 @@
     <div class='mb-3'>
       <label class='form-label' for='lat'>Latitude:</label>
       <input
+        id='lat'
         class='form-control'
         type='number'
         name='lat'
@@ -21,6 +22,7 @@
     <div class='mb-3'>
       <label class='form-label' for='lng'>Longitude:</label>
       <input
+        id='lon'
         class='form-control'
         type='number'
         name='lng'
@@ -34,48 +36,58 @@
   </form>
 </section>
 
-<script>
-  var searchresults = document.getElementById('searchresults')
+<script type="text/javascript">
+  var searchbar = document.getElementById('name');
+  var searchresults = document.getElementById('searchresults');
+  searchbar.addEventListener('blur', resetSearch)
 
   function checkKey(event) {
     var key = event.keyCode || event.charCode;
     if( key == 8 || key == 46 ) {
-      event.target.value = ""
-      resetSearch()
+      //event.target.value = "";
+      resetSearch();
       return false;
     } else {
-      doStationLookup(event.target.value)
+      doStationLookup(event.target.value);
     }
   }
 
   function doStationLookup(value) {
-    console.log(value);
     if (value.length > 3) {      
       fetch('http://api.openweathermap.org/geo/1.0/direct?q='+value+'&limit=5&appid=30f421b6200838c772f19b7f59ba98fb')
       .then(response => response.json())
       .then(result => {
-        console.log('did a lookup:'+result)
-        searchresults.style.display = 'block'
-        searchresults.innerHTML = ''
-        var ul = document.createElement("ul")
-        ul.setAttribute('class', 'search-list')
+        searchresults.style.display = 'block';
+        searchresults.innerHTML = '';
+        var ul = document.createElement("ul");
+        ul.setAttribute('class', 'search-list');
         for (let i=0; i < result.length; i++) {
-          var li = document.createElement("li")
-          li.appendChild(document.createTextNode(result[i].name+', '+result[i].country))
-          li.setAttribute('class', 'searchresult-item')
-          ul.appendChild(li)
+          var li = document.createElement("li");
+          console.log(result[i]);
+          li.appendChild(document.createTextNode(result[i].name+', '+result[i].country));
+          li.setAttribute('class', 'searchresult-item');
+          li.setAttribute('onClick', 'addStationToForm("'+result[i].name+'", '+result[i].lat+', '+result[i].lon+')');
+          ul.appendChild(li);
         }
         searchresults.appendChild(ul)
       })
       .catch(err => console.log(`there was an ${err}`))
     }
-    if (value.length <= 3) {
-      resetSearch()
-    }
+
   }
 
+function addStationToForm(name, lat, lon) {
+  document.getElementById('name').value = name;
+  document.getElementById('lat').value = lat;
+  document.getElementById('lon').value = lon;
+}
+
 function resetSearch() {
-  searchresults.style.display = 'none'
-  searchresults.innerHTML = ''
+  
+  setInterval(() => {
+    //searchbar.value = ''
+    searchresults.style.display = 'none'
+    searchresults.innerHTML = ''
+  }, 500)
 }
 </script>

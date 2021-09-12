@@ -103,7 +103,7 @@ const stations = {
           auto_gen: true,
         })
       })
-      .then(() => {
+      .then(async () => {
         await station.save()
         res.redirect('/stations/' + req.params.id)
       })

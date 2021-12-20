@@ -1,7 +1,10 @@
 const helperUtils = {
-  dateFormat: date => {
-    return date.toLocaleDateString()
+  dateFormat: (date) => {
+    return date.toLocaleDateString();
   },
-}
+  json: (data) => {
+    return JSON.stringify(data);
+  },
+};
 
-module.exports = helperUtils
+module.exports = helperUtils;

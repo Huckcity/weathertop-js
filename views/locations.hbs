@@ -1,13 +1,29 @@
-<p>test locations page</p>
+{{> authmenu id="locations"}}
 
-<div id="update">Updates live</div>
+<section class="d-flex flex-column w-100 justify-content-between">
+{{#each locations}}
+    {{> locationcard }}
+{{/each}}
+</section>
 
-<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<section class="d-flex flex-column w-100 justify-content-between">
+
+{{!-- Form to add a location --}}
+<form action="/locations/add" method="post" class="form">
+    <label>Add a Location</label>
+    <div class="form-group">
+        <label for="topic">Topic</label>
+        <input type="text" class="form-control" name="name" placeholder="Enter Location">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+</section>
+
 <script>
 
     var div = document.getElementById('update')
-
-    //const clientId = 'mqttjs_' + Math.random().toString(16).substr(2, 8)
 
     const host = 'ws://208.113.166.76:9001'
 

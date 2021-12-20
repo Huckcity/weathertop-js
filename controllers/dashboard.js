@@ -3,6 +3,21 @@ const User = require('../models/User')
 const auth = require('../utils/auth')
 const stationUtils = require('../utils/station')
 
+const mqtt = require('mqtt')
+
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 7071 });
+
+// const http = require('http');
+// const WebSocketServer = require('websocket').server;
+// const server = http.createServer();
+// server.listen(8080);
+// const wsServer = new WebSocketServer({
+//     httpServer: server
+// });
+
+
+
 const dashboard = {
   async index(req, res) {
     try {
@@ -86,6 +101,25 @@ const dashboard = {
   },
   errorPage(req, res) {
     res.render('errorPage')
+  },
+
+  locations(req, res) {
+    const client = mqtt.connect('mqtt://208.113.166.76')
+
+    client.on('connect', () => {
+      console.log('Connected to MQTT broker')
+      client.subscribe('zigbee2mqtt/MotionSensor')
+    })
+    
+    wss.on('connection', ws => {
+        client.on('message', (topic, message) => {
+        console.log(`Received message on topic ${topic}: ${message}`)
+        ws.send(JSON.stringify(message))
+      })
+    })
+    
+    // client.end()
+    res.render('locations')
   },
 }
 

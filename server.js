@@ -10,6 +10,9 @@ const redis = require('redis')
 const redisClient = redis.createClient(process.env.REDIS_URL)
 const redisStore = require('connect-redis')(session)
 
+var io = require('socket.io')
+
+
 redisClient.on('error', err => {
   console.log(`Redis error: ${err}`)
 })
@@ -79,6 +82,8 @@ app.use(
 // set routes
 const publicRoutes = require('./routes/public')
 const privateRoutes = require('./routes/private')
+
+
 app.use('/', publicRoutes)
 
 app.use(function (req, res, next) {

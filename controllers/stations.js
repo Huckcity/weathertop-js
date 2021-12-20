@@ -44,7 +44,7 @@ const stations = {
   async deleteStation(req, res) {
     await Station.findByIdAndDelete(req.params.id)
       .then(data => console.log(`${data} was deleted`))
-      .then(() => res.redirect('/'))
+      .then(() => res.redirect('/dashboard'))
       .catch(err => {
         res.status(400).json({
           error: 'Unable to delete station',

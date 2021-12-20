@@ -12,6 +12,8 @@ router.get('/logout', dashboard.logout)
 router.get('/profile', dashboard.profile)
 router.post('/updateProfile', dashboard.updateProfile)
 
+router.get('/locations', dashboard.locations)
+
 /*** Station Routes ***/
 // Find station by ID
 router.get('/stations/:id', stations.findOne)

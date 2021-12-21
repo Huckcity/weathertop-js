@@ -85,7 +85,7 @@ function subscribe(topic) {
     //client.publish('testtopic', 'ws connection demo...!', { qos: 0, retain: false })
 
     devices = {{{json location.devices}}};
-    {{!-- console.log(devices) --}}
+
     for (var i = 0; i < devices.length; i++) {
         divs.push({
           id: devices[i]._id,
@@ -102,16 +102,21 @@ function subscribe(topic) {
       console.log('Received Message: ' + message.toString() + '\nOn topic: ' + topic)
       const jsonMessage = JSON.parse(message)
       //updateDiv(topic, jsonMessage)
+      const relevantDiv = divs.find(div => div.sub === topic)
+      console.log(relevantDiv)
+      if (relevantDiv.type === 'boolean') {
+        document.getElementById(relevantDiv.id).checked = jsonMessage.occupancy;
+      }
     })
 }
 
 function createDivs(divs) {
+  console.log(divs)
     for (var i = 0; i < divs.length; i++) {
 
-      console.log(divs[i])
       if (divs[i].type === "boolean") {
         let div = generateToggleDiv(divs[i]);
-        div.id = divs[i].id
+        //div.id = divs[i].id
         document.getElementById('devices').appendChild(div)
       }
       else if (divs[i].type === "onoff") {
@@ -146,6 +151,7 @@ function generateToggleDiv(device) {
     const checkbox = document.createElement('input')
     checkbox.type = "checkbox"
     checkbox.disabled = true
+    checkbox.id = device.id
 
     const line = document.createElement('span')
     line.className = "slider round"

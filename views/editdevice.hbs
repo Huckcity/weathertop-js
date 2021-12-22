@@ -1,0 +1,49 @@
+{{> authmenu id="locations"}}
+
+<section class="container w-50 mt-4">
+
+  {{! Form to add an mqtt device subscription }}
+  <form action="/updatedevice/{{device._id}}" method="POST">
+    <label>Edit <b>{{device.name}}</b></label>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          name="name"
+          placeholder="Enter device name e.g. Motion Sensor"
+          value="{{device.name}}"
+        />
+      </div>
+      <div class="form-group">
+          <label for="subscription">Subscription</label>
+          <input
+          type="text"
+          class="form-control"
+          name="subscription"
+          placeholder="Enter device subscription topic e.g. zigbee2mqtt/MotionSensor"
+          value="{{device.subscription}}"
+          />
+      </div>
+      <div class="form-group">
+          <label for="parameter">Parameter</label>
+          <input
+          type="text"
+          class="form-control"
+          name="parameter"
+          placeholder="Enter parameter to monitor e.g. occupancy"
+          value="{{device.parameter}}"
+          />
+      </div>
+      <div class="form-group">
+        <label for="type">Type</label>
+        <select class="form-control" name="type">
+            <option value="boolean" {{#if_eq device.type "boolean"}}selected{{/if_eq}}>True/False</option>
+            <option value="onoff" {{#if_eq device.type "onoff"}}selected{{/if_eq}}>On/Off</option>
+            <option value="data" {{#if_eq device.type "data"}}selected{{/if_eq}}>Data Stream</option>
+        </select>
+      </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+</section>

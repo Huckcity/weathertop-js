@@ -63,6 +63,63 @@ const locations = {
         res.redirect("/locations");
       });
   },
+  async editDevice(req, res) {
+    console.log(req.params.id);
+    Location.find({
+      devices: {
+        $elemMatch: {
+          _id: req.params.id,
+        },
+      },
+    })
+      .lean()
+      .then((location) => {
+        const device = location[0].devices.find(
+          (device) => device._id == req.params.id
+        );
+
+        const viewData = {
+          device,
+        };
+        res.render("editdevice", viewData);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.redirect("/locations");
+      });
+  },
+  async deleteLocation(req, res) {
+    Location.findByIdAndDelete(req.params.id)
+      .then(() => {
+        res.redirect("/locations");
+      })
+      .catch((err) => {
+        console.log(err.message);
+        res.status(400).json({ error: "Unable to delete this location" });
+        res.redirect("/locations");
+      });
+  },
+  async updateDevice(req, res) {
+    Location.updateOne(
+      {
+        "devices._id": req.params.id,
+      },
+      {
+        $set: {
+          "devices.$.name": req.body.name,
+        },
+      },
+      (err) => {
+        if (err) {
+          console.log(err.message);
+          res.status(400).json({ error: "Unable to update this device" });
+          res.redirect("/locations");
+        } else {
+          res.redirect("/location/" + req.params.id);
+        }
+      }
+    );
+  },
 };
 
 module.exports = locations;

@@ -2,36 +2,50 @@
 
 <div id="devices"></div>
 
-{{! Form to add an mqtt device subscription }}
-<form action="/locations/{{location._id}}/add" method="POST">
-  <label>Add a Device to <b>{{location.name}}</b></label>
-  <div class="form-group">
-    <label for="topic">Name</label>
-    <input
-      type="text"
-      class="form-control"
-      name="name"
-      placeholder="Enter Device name"
-    />
-  </div>
-    <div class="form-group">
-        <label for="topic">Subscription</label>
+<section class="container w-50 mt-4">
+
+  {{! Form to add an mqtt device subscription }}
+  <form action="/locations/{{location._id}}/add" method="POST">
+    <label>Add a Device to <b>{{location.name}}</b></label>
+      <div class="form-group">
+        <label for="name">Name</label>
         <input
-        type="text"
-        class="form-control"
-        name="subscription"
-        placeholder="Enter Device topic"
+          type="text"
+          class="form-control"
+          name="name"
+          placeholder="Enter device name e.g. Motion Sensor"
         />
-  <div class="form-group">
-    <label for="topic">Type</label>
-    <select class="form-control" name="type">
-      <option value="boolean">True/False</option>
-      <option value="onoff">On/Off</option>
-      <option value="data">Data Stream</option>
-    </select>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+      </div>
+      <div class="form-group">
+          <label for="subscription">Subscription</label>
+          <input
+          type="text"
+          class="form-control"
+          name="subscription"
+          placeholder="Enter device subscription topic e.g. zigbee2mqtt/MotionSensor"
+          />
+      </div>
+      <div class="form-group">
+          <label for="parameter">Parameter</label>
+          <input
+          type="text"
+          class="form-control"
+          name="parameter"
+          placeholder="Enter parameter to monitor e.g. occupancy"
+          />
+      </div>
+      <div class="form-group">
+        <label for="type">Type</label>
+        <select class="form-control" name="type">
+          <option value="boolean">True/False</option>
+          <option value="onoff">On/Off</option>
+          <option value="data">Data Stream</option>
+        </select>
+      </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+</section>
 
 <script>
 
@@ -91,6 +105,7 @@ function subscribe(topic) {
           id: devices[i]._id,
           name: devices[i].name,
           sub: devices[i].subscription,
+          param: devices[i].parameter,
           type: devices[i].type,
         });
         client.subscribe(devices[i].subscription, { qos: 0 })
@@ -101,11 +116,20 @@ function subscribe(topic) {
     client.on('message', (topic, message, packet) => {
       console.log('Received Message: ' + message.toString() + '\nOn topic: ' + topic)
       const jsonMessage = JSON.parse(message)
-      //updateDiv(topic, jsonMessage)
       const relevantDiv = divs.find(div => div.sub === topic)
-      console.log(relevantDiv)
       if (relevantDiv.type === 'boolean') {
-        document.getElementById(relevantDiv.id).checked = jsonMessage.occupancy;
+        console.log(jsonMessage[relevantDiv.param])
+        if (jsonMessage[relevantDiv.param]) {
+          document.getElementById(relevantDiv.id).classList.add('boolean-true')
+        } else {
+          document.getElementById(relevantDiv.id).classList.remove('boolean-true')
+        }
+      }
+      if (relevantDiv.type === 'onoff') {
+        document.getElementById(relevantDiv.id).checked = jsonMessage[relevantDiv.param].toLowerCase() == "on" ? true : false;
+      }
+      if (relevantDiv.type === 'data') {
+        document.getElementById(relevantDiv.id).innerHTML = jsonMessage[relevantDiv.param];
       }
     })
 }
@@ -115,29 +139,21 @@ function createDivs(divs) {
     for (var i = 0; i < divs.length; i++) {
 
       if (divs[i].type === "boolean") {
-        let div = generateToggleDiv(divs[i]);
-        //div.id = divs[i].id
+        let div = generateBooleanDiv(divs[i]);
         document.getElementById('devices').appendChild(div)
       }
       else if (divs[i].type === "onoff") {
         let div = generateOnOffDiv(divs[i]);
-        div.id = divs[i].id
         document.getElementById('devices').appendChild(div)
       }
       else if (divs[i].type === "data") {
         let div = generateDataDiv(divs[i]);
-        div.id = divs[i].id
         document.getElementById('devices').appendChild(div)
       }
     }
 }
 
-function updateDiv(topic, message) {
-    const div = document.getElementById(topic)
-    div.innerHTML = message.occupancy
-}
-
-function generateToggleDiv(device) {
+function generateBooleanDiv(device) {
 
     const container = document.createElement('div')
     container.className = 'device-container'
@@ -145,21 +161,12 @@ function generateToggleDiv(device) {
     heading.innerHTML = device.name
     container.appendChild(heading)
 
-    const label = document.createElement('label')
-    label.className = "switch"
+    const i = document.createElement('i')
+    i.className = "bi bi-check-circle-fill boolean-icon"
+    i.id = device.id
 
-    const checkbox = document.createElement('input')
-    checkbox.type = "checkbox"
-    checkbox.disabled = true
-    checkbox.id = device.id
-
-    const line = document.createElement('span')
-    line.className = "slider round"
-
-    label.appendChild(checkbox)
-    label.appendChild(line)
-
-    container.appendChild(label)
+    container.appendChild(i)
+    container.appendChild(editDeleteButtons(device))
 
     return container
 }
@@ -175,6 +182,7 @@ function generateOnOffDiv(device) {
     label.className = "switch"
 
     const checkbox = document.createElement('input')
+    checkbox.id = device.id
     checkbox.type = "checkbox"
     checkbox.disabled = true
 
@@ -186,6 +194,7 @@ function generateOnOffDiv(device) {
 
     container.appendChild(heading)
     container.appendChild(label)
+    container.appendChild(editDeleteButtons(device))
 
     return container
 }
@@ -198,12 +207,39 @@ function generateDataDiv(device) {
     heading.innerHTML = device.name
 
     const label = document.createElement('label')
-    label.className = "data"
+    label.className = "data-label"
+    label.id = device.id
+    label.innerHTML = "Loading"
 
     container.appendChild(heading)
     container.appendChild(label)
+    container.appendChild(editDeleteButtons(device))
 
     return container
+}
+
+function editDeleteButtons(device) {
+    const buttons = document.createElement('div')
+    buttons.className = 'device-buttons'
+
+    const editButton = document.createElement('i')
+    editButton.className = 'bi bi-pencil'
+    //editButton.innerHTML = 'Edit'
+    editButton.onclick = function() {
+      window.location.href = '/editdevice/' + device.id
+    }
+
+    const deleteButton = document.createElement('i')
+    deleteButton.className = 'bi bi-x-circle'
+    //deleteButton.innerHTML = 'Delete'
+    deleteButton.onclick = function() {
+      window.location.href = '/deletedevice/' + device.id
+    }
+
+    buttons.appendChild(editButton)
+    buttons.appendChild(deleteButton)
+
+    return buttons
 }
 
 connect()

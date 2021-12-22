@@ -34,11 +34,12 @@ router.get("/locations", locations.locations);
 router.get("/location/:id", locations.findOne);
 // Add location
 router.post("/locations/add", locations.addLocation);
-// // Delete location
-// router.get("/locations/delete/:id", locations.deleteLocation);
-// // Add device to location
+// Delete location
+router.get("/locations/delete/:id", locations.deleteLocation);
+// Add device to location
 router.post("/locations/:id/add", locations.addDevice);
-// Delete device from location
-// router.get("/locations/:location_id/delete/:device_id", locations.deleteDevice);
-
+// Edit device page
+router.get("/editdevice/:id", locations.editDevice);
+// Update device
+router.post("/updatedevice/:id", locations.updateDevice);
 module.exports = router;

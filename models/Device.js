@@ -13,6 +13,10 @@ const DeviceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  parameter: {
+    type: String,
+    required: false,
+  },
   created_on: {
     type: Date,
     default: Date.now,

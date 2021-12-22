@@ -52,8 +52,14 @@
 let client;
 
 function connect() {
-    const host = 'wss://mqtt.huckcity.ie:9001';
+    //const host = 'wss://mqtt.huckcity.ie:9001';
+    //const host = 'wss://broker.emqx.io:8084/mqtt';
 
+    let host = 'wss://{{user.broker.url}}:{{user.broker.port}}';
+    if ('{{user.broker.root}}') {
+      host += '/{{user.broker.root}}';
+    }
+    console.log(host)
     const options = {
     keepalive: 30,
     //clientId: clientId,
@@ -170,7 +176,7 @@ function generateBooleanDiv(device) {
 
     const container = document.createElement('div')
     container.className = 'device-container'
-    const heading = document.createElement('h3')
+    const heading = document.createElement('h4')
     heading.innerHTML = device.name
     container.appendChild(heading)
 
@@ -188,7 +194,7 @@ function generateOnOffDiv(device) {
 
     const container = document.createElement('div')
     container.className = 'device-container'
-    const heading = document.createElement('h3')
+    const heading = document.createElement('h4')
     heading.innerHTML = device.name
 
     const label = document.createElement('label')
@@ -216,7 +222,7 @@ function generateDataDiv(device) {
 
     const container = document.createElement('div')
     container.className = 'device-container'
-    const heading = document.createElement('h3')
+    const heading = document.createElement('h4')
     heading.innerHTML = device.name
 
     const label = document.createElement('label')

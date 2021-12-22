@@ -8,7 +8,6 @@ const locations = {
       const locations = await Location.find({
         userId: req.session.userId,
       }).lean();
-
       const viewData = {
         locations,
       };
@@ -19,10 +18,12 @@ const locations = {
     }
   },
   async findOne(req, res) {
+    const user = await auth.currentUserInfo(req.session.userId);
     Location.findById(req.params.id)
       .lean()
       .then((location) => {
         const viewData = {
+          user,
           location,
         };
         res.render("location", viewData);

@@ -54,7 +54,7 @@
       <label for='email'>Email</label>
       <input type="email" class='form-control' name="email" id="email" value="{{user.email}}" disabled>
     </div>
-
+    <hr>
     <div class='mb-3'>
       <label for='old_password'>Old Password</label>
       <input type="password" class='form-control' name="old_password" id="old_password" placeholder="Old password">
@@ -68,6 +68,20 @@
       <input type="password" class='form-control' name="repeat_password" id="repeat_password"
         placeholder="Repeat password">
     </div>
+    <hr>
+    <div class='mb-3'>
+      <label for='broker'>Broker</label>
+      <input type="text" class='form-control' name="url" id="url" placeholder="MQTT Broker" value="{{user.broker.url}}">
+    </div>
+    <div class='mb-3'>
+      <label for='port'>Port</label>
+      <input type="number" class='form-control' name="port" id="port" placeholder="MQTT Port" value="{{user.broker.port}}">
+    </div>
+    <div class='mb-3'>
+      <label for='topic'>Root</label>
+      <input type="text" class='form-control' name="root" id="root" placeholder="Root Topic (Optional)" value="{{user.broker.root}}">
+    </div>
+
     <button type='submit' class='btn btn-primary'>Save Changes</button>
   </form>
 </section>

@@ -88,6 +88,11 @@ const dashboard = {
         $set: {
           fname: req.body.fname,
           lname: req.body.lname,
+          broker: {
+            url: req.body.url,
+            port: req.body.port,
+            root: req.body.root,
+          },
         },
       })
         .then(() => {

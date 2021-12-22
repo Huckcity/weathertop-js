@@ -3528,7 +3528,7 @@ label { font-weight: 500; }
 
 .trend { position: absolute; bottom: 15px; right: 15px; }
 
-#devices { display: -webkit-box; display: -ms-flexbox; display: flex; }
+#devices { display: -webkit-box; display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; }
 
 .device-container { position: relative; padding: 1em; border: 1px solid rgba(168, 161, 161, 0.2); border-radius: 10px; margin: 10px; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; min-height: 200px; min-width: 150px; text-align: center; font-size: large; }
 

@@ -39,7 +39,10 @@ router.get("/locations/delete/:id", locations.deleteLocation);
 // Add device to location
 router.post("/locations/:id/add", locations.addDevice);
 // Edit device page
-router.get("/editdevice/:id", locations.editDevice);
+router.get("/location/:location_id/:device_id", locations.editDevice);
 // Update device
-router.post("/updatedevice/:id", locations.updateDevice);
+router.post("/updatedevice/:location_id/:device_id", locations.updateDevice);
+// Delete device
+router.get("/location/:location_id/:device_id/delete", locations.deleteDevice);
+
 module.exports = router;

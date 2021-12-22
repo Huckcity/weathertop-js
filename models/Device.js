@@ -17,6 +17,11 @@ const DeviceSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  history: {
+    type: Array,
+    required: false,
+    default: [],
+  },
   created_on: {
     type: Date,
     default: Date.now,

@@ -72,6 +72,7 @@ label {
 
 #devices {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .device-container {

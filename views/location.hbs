@@ -2,7 +2,7 @@
 
 <div id="devices"></div>
 
-<section class="container w-50 mt-4">
+<section class="container w-75 mt-4">
 
   {{! Form to add an mqtt device subscription }}
   <form action="/locations/{{location._id}}/add" method="POST">
@@ -50,7 +50,6 @@
 <script>
 
 let client;
-let divs = [];
 
 function connect() {
     const host = 'wss://mqtt.huckcity.ie:9001';
@@ -72,7 +71,7 @@ function connect() {
     rejectUnauthorized: false
     }
 
-    console.log('Connecting MQTT Client')
+    console.log('Connecting MQTT Client: '+host)
     client = mqtt.connect(host, options)
 
     client.on('error', (err) => {
@@ -88,54 +87,52 @@ function connect() {
     console.log('Client Connected')
     })
 
-
     client.on('close', () => {
     console.log('Disconnected')
     })
 }
 
 function subscribe(topic) {
-    //client.subscribe('zigbee2mqtt/MotionSensor', { qos: 0 })
-    //client.publish('testtopic', 'ws connection demo...!', { qos: 0, retain: false })
 
     devices = {{{json location.devices}}};
 
-    for (var i = 0; i < devices.length; i++) {
-        divs.push({
-          id: devices[i]._id,
-          name: devices[i].name,
-          sub: devices[i].subscription,
-          param: devices[i].parameter,
-          type: devices[i].type,
-        });
-        client.subscribe(devices[i].subscription, { qos: 0 })
-    }
+    createDivs(devices);
 
-    createDivs(divs);
+    for (var i = 0; i < devices.length; i++) {
+        client.subscribe(devices[i].subscription, { qos: 0 })
+        if (devices[i].history.length > 0) {
+          updateDivs(devices[i], devices[i].history[devices[i].history.length-1]);
+        }
+    }
 
     client.on('message', (topic, message, packet) => {
       console.log('Received Message: ' + message.toString() + '\nOn topic: ' + topic)
+      // Parse received message to JSON to get the topic
       const jsonMessage = JSON.parse(message)
-      const relevantDiv = divs.find(div => div.sub === topic)
-      if (relevantDiv.type === 'boolean') {
-        console.log(jsonMessage[relevantDiv.param])
-        if (jsonMessage[relevantDiv.param]) {
-          document.getElementById(relevantDiv.id).classList.add('boolean-true')
-        } else {
-          document.getElementById(relevantDiv.id).classList.remove('boolean-true')
-        }
-      }
-      if (relevantDiv.type === 'onoff') {
-        document.getElementById(relevantDiv.id).checked = jsonMessage[relevantDiv.param].toLowerCase() == "on" ? true : false;
-      }
-      if (relevantDiv.type === 'data') {
-        document.getElementById(relevantDiv.id).innerHTML = jsonMessage[relevantDiv.param];
-      }
+      const relevantDevice = devices.find(device => device.subscription === topic)
+
+      updateDivs(relevantDevice, jsonMessage[relevantDevice.parameter]);
+
+      // Make a POST request to the server to update the database
+      fetch('/liveupdatedevice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          _id: relevantDevice._id,
+          location_id: '{{location._id}}',
+          value: jsonMessage[relevantDevice.parameter]
+        })
+      })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.log(err))
+
     })
 }
 
 function createDivs(divs) {
-  console.log(divs)
     for (var i = 0; i < divs.length; i++) {
 
       if (divs[i].type === "boolean") {
@@ -153,6 +150,22 @@ function createDivs(divs) {
     }
 }
 
+function updateDivs(device, message) {
+  if (device.type === 'boolean') {
+    if (message) {
+      document.getElementById(device._id).classList.add('boolean-true')
+    } else {
+      document.getElementById(device._id).classList.remove('boolean-true')
+    }
+  }
+  if (device.type === 'onoff') {
+    document.getElementById(device._id).checked = message.toLowerCase() == "on" ? true : false;
+  }
+  if (device.type === 'data') {
+    document.getElementById(device._id).innerHTML = message;
+  }
+}
+
 function generateBooleanDiv(device) {
 
     const container = document.createElement('div')
@@ -163,7 +176,7 @@ function generateBooleanDiv(device) {
 
     const i = document.createElement('i')
     i.className = "bi bi-check-circle-fill boolean-icon"
-    i.id = device.id
+    i.id = device._id
 
     container.appendChild(i)
     container.appendChild(editDeleteButtons(device))
@@ -182,7 +195,7 @@ function generateOnOffDiv(device) {
     label.className = "switch"
 
     const checkbox = document.createElement('input')
-    checkbox.id = device.id
+    checkbox.id = device._id
     checkbox.type = "checkbox"
     checkbox.disabled = true
 
@@ -208,7 +221,7 @@ function generateDataDiv(device) {
 
     const label = document.createElement('label')
     label.className = "data-label"
-    label.id = device.id
+    label.id = device._id
     label.innerHTML = "Loading"
 
     container.appendChild(heading)
@@ -224,16 +237,16 @@ function editDeleteButtons(device) {
 
     const editButton = document.createElement('i')
     editButton.className = 'bi bi-pencil'
-    //editButton.innerHTML = 'Edit'
     editButton.onclick = function() {
-      window.location.href = '/editdevice/' + device.id
+      window.location.href = '/location/{{{location._id}}}/' + device._id
     }
 
     const deleteButton = document.createElement('i')
     deleteButton.className = 'bi bi-x-circle'
-    //deleteButton.innerHTML = 'Delete'
     deleteButton.onclick = function() {
-      window.location.href = '/deletedevice/' + device.id
+      if (confirm('Are you sure you want to delete this device?')) {
+        window.location.href = '/location/{{{location._id}}}/' + device._id + '/delete'
+      }
     }
 
     buttons.appendChild(editButton)

@@ -3,7 +3,7 @@
 <section class="container w-50 mt-4">
 
   {{! Form to add an mqtt device subscription }}
-  <form action="/updatedevice/{{device._id}}" method="POST">
+  <form action="/updatedevice/{{location_id}}/{{device._id}}" method="POST">
     <label>Edit <b>{{device.name}}</b></label>
       <div class="form-group">
         <label for="name">Name</label>

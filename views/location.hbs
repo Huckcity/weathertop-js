@@ -93,6 +93,8 @@ function connect() {
 
     client.on('connect', () => {
     console.log('Client Connected')
+    subscribe()
+
     })
 
     client.on('close', () => {
@@ -103,11 +105,12 @@ function connect() {
 function subscribe(topic) {
 
     devices = {{{json location.devices}}};
-
+    let topics = [];
     createDivs(devices);
 
     for (var i = 0; i < devices.length; i++) {
         client.subscribe(devices[i].subscription, { qos: 2 })
+        topics.push(devices[i].subscription)
         if (devices[i].history) {
           if (devices[i].history.length > 0) {
             updateDivs(devices[i], devices[i].history[devices[i].history.length-1]);
@@ -117,27 +120,31 @@ function subscribe(topic) {
 
     client.on('message', (topic, message, packet) => {
       console.log('Received Message: ' + message.toString() + '\nOn topic: ' + topic)
-      // Parse received message to JSON to get the topic
-      const jsonMessage = JSON.parse(message)
-      const relevantDevice = devices.find(device => device.subscription === topic)
 
-      updateDivs(relevantDevice, { value: jsonMessage[relevantDevice.parameter] });
+      if (topics.includes(topic)) {
 
-      // Make a POST request to the server to update the database
-      fetch('/liveupdatedevice', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          _id: relevantDevice._id,
-          location_id: '{{location._id}}',
-          value: jsonMessage[relevantDevice.parameter]
+        // Parse received message to JSON to get the topic
+        const jsonMessage = JSON.parse(message)
+        const relevantDevice = devices.find(device => device.subscription === topic)
+
+        updateDivs(relevantDevice, { value: jsonMessage[relevantDevice.parameter] });
+
+        // Make a POST request to the server to update the database
+        fetch('/liveupdatedevice', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            _id: relevantDevice._id,
+            location_id: '{{location._id}}',
+            value: jsonMessage[relevantDevice.parameter]
+          })
         })
-      })
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(err => console.log(err))
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+      }
 
     })
 }
@@ -267,6 +274,5 @@ function editDeleteButtons(device) {
 }
 
 connect()
-subscribe()
 
 </script>

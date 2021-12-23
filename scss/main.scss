@@ -55,9 +55,28 @@ label {
   color: $notblack;
 }
 
+.form {
+  margin-top: 1em;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .form-right {
-  padding: 2em;
   border-left: 3px solid #ccc;
+}
+
+.form-heading {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1em;
+  border-left: 1px solid $lightinputborder;
+  padding-left: 15px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1em;
 }
 
 .text-notblack {
@@ -121,6 +140,18 @@ label {
   font-size: 4em;
   -webkit-transition: all .5s ease;
   transition: all .5s ease;
+}
+
+.network-circle {
+  height: 25px;
+  width: 25px;
+  background-color: rgba(155, 39, 39, 0.5);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.network-online {
+  background-color:rgba(77, 160, 81, 1);
 }
 
 /* HTML Toggle Switch borrowed... REF : https://www.w3schools.com/howto/howto_css_switch.asp */

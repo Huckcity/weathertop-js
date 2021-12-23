@@ -3522,7 +3522,13 @@ label { font-weight: 500; }
 
 .readings-table { color: #413d3d; }
 
-.form-right { padding: 2em; border-left: 3px solid #ccc; }
+.form { margin-top: 1em; padding-left: 2rem; padding-right: 2rem; }
+
+.form-right { border-left: 3px solid #ccc; }
+
+.form-heading { font-size: 1.5rem; font-weight: 500; margin-bottom: 1em; border-left: 1px solid rgba(168, 161, 161, 0.5); padding-left: 15px; }
+
+.button-container { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-pack: justify; -ms-flex-pack: justify; justify-content: space-between; margin-top: 1em; }
 
 .text-notblack { color: #413d3d; }
 
@@ -3543,6 +3549,10 @@ label { font-weight: 500; }
 .boolean-icon { color: #ccc; font-size: 3rem; -webkit-transition: all 0.5s ease; transition: all 0.5s ease; }
 
 .boolean-true { color: #4da051; font-size: 4em; -webkit-transition: all .5s ease; transition: all .5s ease; }
+
+.network-circle { height: 25px; width: 25px; background-color: rgba(155, 39, 39, 0.5); border-radius: 50%; display: inline-block; }
+
+.network-online { background-color: #4da051; }
 
 /* HTML Toggle Switch borrowed... REF : https://www.w3schools.com/howto/howto_css_switch.asp */
 /* The switch - the box around the slider */

@@ -1,0 +1,155 @@
+{{> authmenu id="network"}}
+
+<section class="mt-4">
+
+<div class="overflow-x-auto">
+  <table class="table w-full">
+    <thead>
+      <tr>
+        <th></th> 
+        <th>Name</th> 
+        <th>MAC Address</th> 
+        <th>Last Seen</th>
+        <th>Online</th>
+      </tr>
+    </thead> 
+    <tbody>
+        {{#each networkDevices}}
+      <tr>
+        <th>#{{counter @index}}</th> 
+        <td>{{name}}</td> 
+        <td>{{mac_address}}</td> 
+        <td>{{last_seen}}</td>
+        <td class="text-center"><span id="{{mac_address}}" class="network-circle"></span></td>
+      </tr>
+        {{/each}}
+    </tbody>
+  </table>
+</div>
+
+</section>
+
+<section class="container w-50">
+
+    {{!-- Form to add named MAC address for tracking --}}
+    <form action="/network/add" method="POST">
+    <label class="form-heading">Add a Network device to <b>{{location.name}}</b></label>
+        <div class="form-group">
+        <label for="name">Name</label>
+        <input
+            type="text"
+            class="form-control"
+            name="name"
+            placeholder="Enter device name e.g. My iPhone"
+        />
+        </div>
+        <div class="form-group">
+            <label for="mac">MAC Address</label>
+            <input
+            type="text"
+            class="form-control"
+            name="mac_address"
+            placeholder="Enter device MAC address e.g. 00:00:00:00:00:00"
+            />
+        </div>
+        <div class="button-container">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</section>
+
+
+<script>
+
+let client;
+
+function connect() {
+
+    let host = 'wss://{{user.broker.url}}:{{user.broker.port}}';
+    if ('{{user.broker.root}}') {
+      host += '/{{user.broker.root}}';
+    }
+    console.log(host)
+    const options = {
+    keepalive: 30,
+    clientId: '{{user._id}}',
+    protocolId: 'MQTT',
+    protocolVersion: 4,
+    clean: false,
+    reconnectPeriod: 1000,
+    connectTimeout: 30 * 1000,
+    will: {
+        topic: 'WillMsg',
+        payload: 'Connection Closed abnormally..!',
+        qos: 0,
+        retain: false
+    },
+    rejectUnauthorized: false
+    }
+
+    console.log('Connecting MQTT Client: '+host)
+    client = mqtt.connect(host, options)
+
+    client.on('error', (err) => {
+    console.log('Connection error: ', err)
+    client.end()
+    })
+
+    client.on('reconnect', () => {
+    console.log('Reconnecting...')
+    })
+
+    client.on('connect', () => {
+    console.log('Client Connected')
+    subscribe()
+    })
+
+    client.on('close', () => {
+    console.log('Disconnected')
+    })
+}
+
+function subscribe(topic) {
+
+    devices = {{{json networkDevices}}};
+    let topics = [];
+
+    for (var i = 0; i < devices.length; i++) {
+        client.subscribe('macstatus/' + devices[i].mac_address, { qos: 2 })
+        topics.push('macstatus/' + devices[i].mac_address)
+        console.log('Subscribed to: ' + 'macstatus/' + devices[i].mac_address)
+        if (devices[i].online) {
+            document.getElementById(devices[i].mac_address).classList.add('network-online')
+        }
+    }
+
+    client.on('message', (topic, message, packet) => {
+      if (topics.includes(topic)) {
+        let device = devices.find(device => device.mac_address === topic.split('/')[1])
+        if (message.toString().toLowerCase() === 'true') {
+            document.getElementById(device.mac_address).classList.add('network-online')
+        } else {
+            document.getElementById(device.mac_address).classList.remove('network-online')
+        }
+
+        // Make a POST request to the server to update the database
+        fetch('/liveupdatenetworkdevice', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              _id: device._id,
+              online: message.toString().toLowerCase()
+            })
+        })
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+      }
+
+    })
+}
+
+connect()
+
+</script>

@@ -2,11 +2,10 @@
 
 <div id="devices"></div>
 
-<section class="container w-75 mt-4">
-
-  {{! Form to add an mqtt device subscription }}
+<section class="container w-50 mt-4">
+    {{! Form to add an mqtt device subscription }}
   <form action="/locations/{{location._id}}/add" method="POST">
-    <label>Add a Device to <b>{{location.name}}</b></label>
+    <label class="form-heading">Add an IOT Device to <b>{{location.name}}</b></label>
       <div class="form-group">
         <label for="name">Name</label>
         <input
@@ -42,8 +41,13 @@
           <option value="data">Data Stream</option>
         </select>
       </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="button-container">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
   </form>
+  </div>
+</div>
+  
 
 </section>
 
@@ -52,8 +56,6 @@
 let client;
 
 function connect() {
-    //const host = 'wss://mqtt.huckcity.ie:9001';
-    //const host = 'wss://broker.emqx.io:8084/mqtt';
 
     let host = 'wss://{{user.broker.url}}:{{user.broker.port}}';
     if ('{{user.broker.root}}') {
@@ -268,5 +270,3 @@ connect()
 subscribe()
 
 </script>
-
-

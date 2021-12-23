@@ -11,6 +11,9 @@ const helperUtils = {
     }
     return options.inverse(this);
   },
+  counter: (index) => {
+    return index + 1;
+  },
 };
 
 module.exports = helperUtils;

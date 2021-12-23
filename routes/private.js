@@ -3,7 +3,7 @@ const router = require("express").Router();
 const dashboard = require("../controllers/dashboard");
 const stations = require("../controllers/stations");
 const locations = require("../controllers/locations");
-
+const network = require("../controllers/network");
 // Generic error route
 router.get("/oops", dashboard.errorPage);
 
@@ -12,6 +12,8 @@ router.get("/dashboard", dashboard.index);
 router.get("/logout", dashboard.logout);
 router.get("/profile", dashboard.profile);
 router.post("/updateProfile", dashboard.updateProfile);
+router.get("/network", network.index);
+router.post("/network/add", network.addDevice);
 
 /*** Station Routes ***/
 // Find station by ID

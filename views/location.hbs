@@ -161,7 +161,7 @@ function createDivs(divs) {
 function updateDivs(device, message) {
   console.log(device, message)
   if (device.type === 'boolean') {
-    if (message) {
+    if (message.value) {
       document.getElementById(device._id).classList.add('boolean-true')
     } else {
       document.getElementById(device._id).classList.remove('boolean-true')

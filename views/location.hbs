@@ -62,10 +62,10 @@ function connect() {
     console.log(host)
     const options = {
     keepalive: 30,
-    //clientId: clientId,
+    clientId: '{{user._id}}',
     protocolId: 'MQTT',
     protocolVersion: 4,
-    clean: true,
+    clean: false,
     reconnectPeriod: 1000,
     connectTimeout: 30 * 1000,
     will: {
@@ -105,9 +105,11 @@ function subscribe(topic) {
     createDivs(devices);
 
     for (var i = 0; i < devices.length; i++) {
-        client.subscribe(devices[i].subscription, { qos: 0 })
-        if (devices[i].history.length > 0) {
-          updateDivs(devices[i], devices[i].history[devices[i].history.length-1]);
+        client.subscribe(devices[i].subscription, { qos: 2 })
+        if (devices[i].history) {
+          if (devices[i].history.length > 0) {
+            updateDivs(devices[i], devices[i].history[devices[i].history.length-1]);
+          }
         }
     }
 
@@ -117,7 +119,7 @@ function subscribe(topic) {
       const jsonMessage = JSON.parse(message)
       const relevantDevice = devices.find(device => device.subscription === topic)
 
-      updateDivs(relevantDevice, jsonMessage[relevantDevice.parameter]);
+      updateDivs(relevantDevice, { value: jsonMessage[relevantDevice.parameter] });
 
       // Make a POST request to the server to update the database
       fetch('/liveupdatedevice', {
@@ -157,6 +159,7 @@ function createDivs(divs) {
 }
 
 function updateDivs(device, message) {
+  console.log(device, message)
   if (device.type === 'boolean') {
     if (message) {
       document.getElementById(device._id).classList.add('boolean-true')
@@ -165,10 +168,10 @@ function updateDivs(device, message) {
     }
   }
   if (device.type === 'onoff') {
-    document.getElementById(device._id).checked = message.toLowerCase() == "on" ? true : false;
+    document.getElementById(device._id).checked = message.value.toLowerCase() == "on" ? true : false;
   }
   if (device.type === 'data') {
-    document.getElementById(device._id).innerHTML = message;
+    document.getElementById(device._id).innerHTML = message.value;
   }
 }
 

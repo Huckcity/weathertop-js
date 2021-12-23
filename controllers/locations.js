@@ -135,7 +135,10 @@ const locations = {
       },
       {
         $push: {
-          "devices.$[outer].history": req.body.value,
+          "devices.$[outer].history": {
+            value: req.body.value,
+            timestamp: Date.now(),
+          },
         },
       },
       {

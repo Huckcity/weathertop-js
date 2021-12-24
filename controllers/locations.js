@@ -171,6 +171,15 @@ const locations = {
         res.redirect("/locations");
       });
   },
+  async history(req, res) {
+    try {
+      const location = await Location.findById(req.params.id).lean();
+      res.render("history", { location });
+    } catch (err) {
+      console.log(err.message);
+      res.redirect("/oops");
+    }
+  },
 };
 
 module.exports = locations;

@@ -1,6 +1,11 @@
 {{> authmenu id="locations"}}
 
-<div id="devices"></div>
+<div>
+  <div style="text-align: end;">
+    <a href="/location/{{location._id}}/history">View History For This Location</a>
+  </div>
+  <div id="devices"></div>
+</div>
 
 <section class="container w-50 mt-4">
     {{! Form to add an mqtt device subscription }}
@@ -48,7 +53,6 @@
   </div>
 </div>
   
-
 </section>
 
 <script>

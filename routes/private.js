@@ -40,6 +40,8 @@ router.post("/locations/add", locations.addLocation);
 router.get("/locations/delete/:id", locations.deleteLocation);
 // Add device to location
 router.post("/locations/:id/add", locations.addDevice);
+// Location history
+router.get("/location/:id/history", locations.history);
 // Edit device page
 router.get("/location/:location_id/:device_id", locations.editDevice);
 // Update device

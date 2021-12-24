@@ -1,0 +1,61 @@
+{{> authmenu id="locations"}}
+
+<a href="/location/{{location._id}}">< Back</a>
+<section>
+  {{#each location.devices}}
+    <div id="{{this._id}}"></div>
+  {{/each}}
+</section>
+
+<script>
+
+
+window.onload = function() {
+
+    const jsonDevices = {{{json location.devices}}};
+            console.log(jsonDevices[2])
+
+    jsonDevices.forEach(function(device) {
+        console.log(device)
+        generarteChart(device)
+    })
+
+    function generarteChart(device) {
+
+        const lastTenItems = device.history.slice(-20);
+        const labels = lastTenItems.map(item => dateFormat(item.timestamp));
+        const values = lastTenItems.map(item => item.value);
+
+        const data = {
+        labels: labels,
+        datasets: [
+                {
+                    name: device.parameter, type: "bar",
+                    values: values
+                }
+            ]
+        }
+
+        const chart = new frappe.Chart(document.getElementById(device._id), {  // or a DOM element,
+                                                    // new Chart() in case of ES6 module with above usage
+            title: device.name,
+            data: data,
+            type: 'axis-mixed', // or 'bar', 'line', 'scatter', 'pie', 'percentage'
+            height: 250,
+            colors: ['#7cd6fd', '#743ee2']
+        })
+
+    }
+
+    function dateFormat(date) {
+        const d = new Date(date);
+        return d.getDate()+
+          "/"+(d.getMonth()+1)+
+          "/"+d.getFullYear()+
+          " "+d.getHours()+
+          ":"+d.getMinutes()+
+          ":"+d.getSeconds();
+    }
+
+}
+</script>

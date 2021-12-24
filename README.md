@@ -2,7 +2,8 @@
 
 #### Student Name: Adam Gibbons Student ID: 20095362
 
-  
+Youtube Demo: https://youtu.be/PwS7KSuf4K8
+Presentation Slides: https://1drv.ms/p/s!AneZTfixVrvvhJVzFM6YJI6zdWyiHQ?e=GdzsUI
 
 The [WeatherTop IoT](https://weathertop-iot.herokuapp.com/) platform is a fully developed iteration of the existing platform that now enables users to **add their own locations** and, using MQTT subscriptions, add **any number of subscriptions from any publicly accessible MQTT broker**. These subscriptions are then tracked and the data stored, including **live real-time updates** through the means of MQTT WebSocket client connection.  
 
